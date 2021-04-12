@@ -6,6 +6,7 @@ import (
 )
 
 type (
+	// Event interface for event data
 	Event interface {
 		// Data returns all event data
 		Data() typed.Typed
@@ -16,11 +17,11 @@ type (
 		// Object returns event object
 		Object() typed.Typed
 
-		// GroupId returns event object
-		GroupId() int
+		// GroupID returns event object
+		GroupID() int
 
-		// EventId returns event event_id
-		EventId() string
+		// EventID returns event event_id
+		EventID() string
 	}
 
 	event struct {
@@ -28,6 +29,7 @@ type (
 	}
 )
 
+// NewEvent parse date to event data
 func NewEvent(data map[string]interface{}) (Event, error) {
 	return parseToEventType(data)
 }
@@ -44,11 +46,11 @@ func (e *event) Object() typed.Typed {
 	return e.data.Object("object")
 }
 
-func (e *event) GroupId() int {
+func (e *event) GroupID() int {
 	return e.data.Int("group_id")
 }
 
-func (e *event) EventId() string {
+func (e *event) EventID() string {
 	return e.data.String("event_id")
 }
 

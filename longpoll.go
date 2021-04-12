@@ -15,6 +15,7 @@ import (
 )
 
 type (
+	// GroupLongPollServer client for api.vk.com groupLongPollServer
 	GroupLongPollServer interface {
 		// Settings get settings set by SetSettings or default settings of GroupLongPollServer
 		// enabled - 1, message_new - 1, others - 0
@@ -41,8 +42,8 @@ type (
 		Server      string
 		Ts          string
 		mtx         *sync.Mutex
-		VkApi       VkApi
-		GroupId     int
+		VkAPI       VkAPI
+		GroupID     int
 		eventCtx    context.Context
 		eventCancel context.CancelFunc
 		settings    Params
@@ -52,16 +53,23 @@ type (
 	}
 )
 
+// LongPollConfig enable to configure GroupLongPollServe
 type LongPollConfig struct {
+	// Wait max time (in seconds) to await updates
 	Wait             int
+
+	// UpdateBufferSize size of Update chan buffer size
 	UpdateBufferSize int
+
+	// Limiter rate limiter for incoming updates
 	Limiter          *rate.Limiter
 }
 
-func NewGroupLongPollServer(vkApi VkApi, groupId int) GroupLongPollServer {
+// NewGroupLongPollServer create new GroupLongPollServer with VkAPI wrapper and group id
+func NewGroupLongPollServer(vkAPI VkAPI, groupID int) GroupLongPollServer {
 	s := &groupLongPollServer{
-		VkApi:      vkApi,
-		GroupId:    groupId,
+		VkAPI:      vkAPI,
+		GroupID:    groupID,
 		mtx:        &sync.Mutex{},
 		eventCtx:   context.Background(),
 		client:     client,
@@ -101,7 +109,7 @@ func (s *groupLongPollServer) SetConfig(config LongPollConfig) {
 }
 
 func (s *groupLongPollServer) Init() error {
-	_, err := s.VkApi.CallMethod("groups.setLongPollSettings", s.settings)
+	_, err := s.VkAPI.CallMethod("groups.setLongPollSettings", s.settings)
 	if err != nil {
 		return err
 	}
@@ -156,8 +164,12 @@ func (s *groupLongPollServer) StartUpdatesLoop() <-chan Update {
 }
 
 type (
+	// Update interface for update
 	Update interface {
+		// Ts returns timestamp of update
 		Ts() string
+
+		// Events returns array of events
 		Events() []event.Event
 	}
 
@@ -167,6 +179,7 @@ type (
 	}
 )
 
+// NewUpdate parse new update from data
 func NewUpdate(data typed.Typed) (Update, error) {
 	return parseToUpdateType(data)
 }
@@ -214,7 +227,7 @@ func (s *groupLongPollServer) StopUpdatesLoop() {
 }
 
 func (s *groupLongPollServer) init() error {
-	resp, err := s.VkApi.CallMethod("groups.getLongPollServer", Params{"group_id": s.GroupId})
+	resp, err := s.VkAPI.CallMethod("groups.getLongPollServer", Params{"group_id": s.GroupID})
 	if err != nil {
 		return err
 	}
@@ -258,7 +271,7 @@ func (s *groupLongPollServer) getUpdate() chan unmarshalledResponseAndErr {
 				"act":  "a_check",
 				"wait": s.config.Wait,
 			}
-			reqBody := strings.NewReader(params.UrlValues().Encode())
+			reqBody := strings.NewReader(params.URLValues().Encode())
 			httpReq, err := http.NewRequestWithContext(s.eventCtx, http.MethodPost, s.Server, reqBody)
 			if err != nil {
 				err := newInternalError(err, "invalid request")
@@ -330,19 +343,19 @@ func (s *groupLongPollServer) getUpdate() chan unmarshalledResponseAndErr {
 
 func (s *groupLongPollServer) defaultSettings() {
 	s.settings = Params{
-		"group_id":                         s.GroupId,
-		"enabled":                          1,
-		"api_version":                      kVkApiVersion,
-		"app_payload":                      0,
-		"audio_new":                        0,
-		"board_post_delete":                0,
-		"board_post_edit":                  0,
-		"board_post_new":                   0,
-		"board_post_restore":               0,
-		"group_change_photo":               0,
-		"group_change_settings":            0,
-		"group_join":                       0,
-		"group_leave":                      0,
+		"group_id":              s.GroupID,
+		"enabled":               1,
+		"api_version":           VkAPIVersion,
+		"app_payload":           0,
+		"audio_new":             0,
+		"board_post_delete":     0,
+		"board_post_edit":       0,
+		"board_post_new":        0,
+		"board_post_restore":    0,
+		"group_change_photo":    0,
+		"group_change_settings": 0,
+		"group_join":            0,
+		"group_leave":           0,
 		"group_officers_edit":              0,
 		"market_comment_delete":            0,
 		"market_comment_edit":              0,

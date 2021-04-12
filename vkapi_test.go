@@ -12,7 +12,7 @@ func TestInvalidPostForm(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL,
 		client: server.Client(),
 	}
@@ -28,7 +28,7 @@ func TestInvalidJsonResponse(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL + "/",
 		client: server.Client(),
 	}
@@ -41,15 +41,15 @@ func TestInvalidJsonResponse(t *testing.T) {
 }
 
 func TestVkApiErrorResponse(t *testing.T) {
-	vkApiErrorResponse :=[]byte(
+	vkAPIErrorResponse :=[]byte(
 		`{"error": "dumb_error"}`,
 		)
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Write(vkApiErrorResponse)
+			w.Write(vkAPIErrorResponse)
 		}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL + "/",
 		client: server.Client(),
 	}
@@ -62,15 +62,15 @@ func TestVkApiErrorResponse(t *testing.T) {
 }
 
 func TestVkApiNoResponseField(t *testing.T) {
-	vkApiResponse :=[]byte(
+	vkAPIResponse :=[]byte(
 		`{"field": "dump_field"}`,
 	)
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Write(vkApiResponse)
+			w.Write(vkAPIResponse)
 		}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL + "/",
 		client: server.Client(),
 	}
@@ -83,15 +83,15 @@ func TestVkApiNoResponseField(t *testing.T) {
 }
 
 func TestVkApiNotJsonObjectResponseField(t *testing.T) {
-	vkApiResponse :=[]byte(
+	vkAPIResponse :=[]byte(
 		`{"response": "dump_field"}`,
 	)
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Write(vkApiResponse)
+			w.Write(vkAPIResponse)
 		}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL + "/",
 		client: server.Client(),
 	}
@@ -104,15 +104,15 @@ func TestVkApiNotJsonObjectResponseField(t *testing.T) {
 }
 
 func TestVkApiNumberResponse(t *testing.T) {
-	vkApiResponse :=[]byte(
+	vkAPIResponse :=[]byte(
 		`{"response": 1}`,
 	)
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Write(vkApiResponse)
+			w.Write(vkAPIResponse)
 		}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL + "/",
 		client: server.Client(),
 	}
@@ -124,23 +124,23 @@ func TestVkApiNumberResponse(t *testing.T) {
 	}
 
 	var i interface{}
-	json.Unmarshal(vkApiResponse, &i)
+	json.Unmarshal(vkAPIResponse, &i)
 
 	if reflect.DeepEqual(resp, i) {
-		t.Errorf("resp: %v\n vkApiResponse: %v", resp, i)
+		t.Errorf("resp: %v\n vkAPIResponse: %v", resp, i)
 	}
 }
 
 func TestVkApiResponse(t *testing.T) {
-	vkApiResponse :=[]byte(
+	vkAPIResponse :=[]byte(
 		`{"response": {"vk_object": "test"}}`,
 	)
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Write(vkApiResponse)
+			w.Write(vkAPIResponse)
 		}))
 
-	api := vkApi{
+	api := vkAPI{
 		URL: server.URL + "/",
 		client: server.Client(),
 	}
@@ -152,9 +152,9 @@ func TestVkApiResponse(t *testing.T) {
 	}
 
 	var i interface{}
-	json.Unmarshal(vkApiResponse, &i)
+	json.Unmarshal(vkAPIResponse, &i)
 
 	if reflect.DeepEqual(resp, i) {
-		t.Errorf("resp: %v\n vkApiResponse: %v", resp, i)
+		t.Errorf("resp: %v\n vkAPIResponse: %v", resp, i)
 	}
 }

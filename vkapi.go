@@ -8,12 +8,13 @@ import (
 	"net/http"
 )
 
-type VkApi interface {
+// VkAPI wraps vk api methods to call
+type VkAPI interface {
 	// CallMethod calls api.vk.com method by name with params
 	CallMethod(methodName string, params Params) (typed.Typed, error)
 }
 
-type vkApi struct {
+type vkAPI struct {
 	Version  string
 	Language string
 	URL      string
@@ -22,30 +23,32 @@ type vkApi struct {
 	client *http.Client
 }
 
-func NewVkApi(token string) VkApi {
-	vkApi := &vkApi{
-		Version: kVkApiVersion,
-		URL:     kVkApiUrl,
+// NewVkAPI create new vk api with token
+// and default version
+func NewVkAPI(token string) VkAPI {
+	vkAPI := &vkAPI{
+		Version: VkAPIVersion,
+		URL:     VkAPIUrl,
 		Token:   token,
 		client:  client,
 	}
-	return vkApi
+	return vkAPI
 }
 
-func (api *vkApi) SetLanguage(lang string) {
+func (api *vkAPI) SetLanguage(lang string) {
 	api.Language = lang
 }
 
-func (api *vkApi) SetToken(token string) {
+func (api *vkAPI) SetToken(token string) {
 	api.Token = token
 }
 
-func (api *vkApi) CallMethod(methodName string, params Params) (typed.Typed, error) {
+func (api *vkAPI) CallMethod(methodName string, params Params) (typed.Typed, error) {
 	params["v"] = api.Version
 	params["lang"] = api.Language
 	params["access_token"] = api.Token
 
-	values := params.UrlValues()
+	values := params.URLValues()
 	httpResp, err := api.client.PostForm(api.URL + methodName, values)
 	if err != nil {
 		return nil, err

@@ -7,11 +7,13 @@ import (
 	"time"
 )
 
+// Params allows you to pass keys with values of various types
+// It support only int and string
 type Params map[string]interface{}
 
-// UrlValues convert Params to url.Values
+// URLValues convert Params to url.Values
 // Do not skipped only string or numeric fields
-func (p Params) UrlValues() url.Values {
+func (p Params) URLValues() url.Values {
 	values := url.Values{}
 	for name, i := range p {
 		switch i.(type) {

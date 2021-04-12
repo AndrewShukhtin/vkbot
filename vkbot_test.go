@@ -44,7 +44,7 @@ func TestDispatcherCancellation(t *testing.T) {
 
 func TestVkBot_SetConfig(t *testing.T) {
 	bot := &VkBot{}
-	cfg := VkBotConfig{Workers: 10, WorkerBuffer: 10, Events: 10}
+	cfg := BotConfig{Workers: 10, WorkerBuffer: 10, Events: 10}
 	bot.SetConfig(cfg)
 
 	if bot.config != cfg {
@@ -59,7 +59,7 @@ func TestVkBot_Init(t *testing.T) {
 	}
 	type TestCase struct {
 		Name                string
-		VkApi               VkApi
+		VkAPI               VkAPI
 		GroupLongPollServer GroupLongPollServer
 		HandlerInfo         HandlerInfo
 		ShouldBeError       bool
@@ -83,7 +83,7 @@ func TestVkBot_Init(t *testing.T) {
 			ShouldBeError: true,
 			GroupLongPollServer: &groupLongPollServer{
 				settings: Params{"fake_event": 1},
-				VkApi:    newFakeVkApi(map[string]typed.Typed{}),
+				VkAPI:    newFakeVkAPI(map[string]typed.Typed{}),
 			},
 		},
 		{
@@ -92,7 +92,7 @@ func TestVkBot_Init(t *testing.T) {
 			ShouldBeError: false,
 			GroupLongPollServer: &groupLongPollServer{
 				settings: Params{"fake_event": 1},
-				VkApi: newFakeVkApi(map[string]typed.Typed{
+				VkAPI: newFakeVkAPI(map[string]typed.Typed{
 					"groups.setLongPollSettings": {},
 					"groups.getLongPollServer": {
 						"ts":     "test_ts",
@@ -107,7 +107,7 @@ func TestVkBot_Init(t *testing.T) {
 
 	for _, tc := range testCases {
 		bot := &VkBot{
-			vkApi:          tc.VkApi,
+			vkAPI:          tc.VkAPI,
 			handlers:       map[string]HandleFunc{},
 			longPollServer: tc.GroupLongPollServer,
 		}
@@ -263,7 +263,7 @@ func TestVkBot_Start(t *testing.T) {
 	bot := VkBot{
 		handlers: map[string]HandleFunc{},
 		longPollServer: longPollServer,
-		config: VkBotConfig{
+		config: BotConfig{
 			Workers: 3,
 		},
 	}

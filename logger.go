@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Logger default zap logger
 var Logger *zap.Logger
 
 func init() {

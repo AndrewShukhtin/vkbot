@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	// Version of framework
 	Version = "0.0.1"
 	banner  = `
  ___      ___ ___  __    ________  ________  _________   
@@ -24,48 +25,60 @@ const (
 `
 )
 
+// HandleFunc alias for event handler function
 type HandleFunc func(event.Event) error
 
 var notFoundHandler HandleFunc = func(e event.Event) error {
 	return fmt.Errorf("not implemented event handler for '%s' event", e.Type())
 }
 
-type VkBotConfig struct {
+// BotConfig allows to configure bot
+type BotConfig struct {
+	// Workers number of workers
 	Workers      int
+
+	// WorkerBuffer buffer of each worker chan
 	WorkerBuffer int
+
+	// Events buffer off events chan
 	Events       int
 }
 
+// VkBot structure for handle events from GroupLongPollServer
 type VkBot struct {
-	vkApi          VkApi
+	vkAPI          VkAPI
 	longPollServer GroupLongPollServer
 	handlers       map[string]HandleFunc
 
-	config     VkBotConfig
+	config     BotConfig
 	dispatcher *dispatcher
 
 	enableBanner bool
 }
 
-func NewVkBot(vkApi VkApi, longPollServer GroupLongPollServer) *VkBot {
+// NewVkBot creates new VkBot
+func NewVkBot(vkAPI VkAPI, longPollServer GroupLongPollServer) *VkBot {
 	b := &VkBot{
-		vkApi:          vkApi,
+		vkAPI:          vkAPI,
 		longPollServer: longPollServer,
 		handlers:       make(map[string]HandleFunc),
 		config:         defaultConfig(),
-		enableBanner: 	true,
+		enableBanner:   true,
 	}
 	return b
 }
 
+// EventHandler allows to add handler for event type
 func (bot *VkBot) EventHandler(eventType string, handler HandleFunc) {
 	bot.handlers[eventType] = handler
 }
 
-func (bot *VkBot) SetConfig(cfg VkBotConfig) {
+// SetConfig sets configuration of bot
+func (bot *VkBot) SetConfig(cfg BotConfig) {
 	bot.config = cfg
 }
 
+// Init initializes longPollServer and check correctness of handlers
 func (bot *VkBot) Init() error {
 	if bot.enableBanner {
 		c := color.New(color.FgBlue, color.Bold)
@@ -88,6 +101,7 @@ func (bot *VkBot) Init() error {
 	return nil
 }
 
+// Start serves the incoming events
 func (bot *VkBot) Start() {
 	bot.dispatcher = newDispatcher(bot.config.Workers, bot.config.WorkerBuffer)
 	bot.dispatcher.setWorkerFunc(bot.handleEvent)
@@ -105,6 +119,7 @@ func (bot *VkBot) Start() {
 	bot.dispatcher.dispatch(eventsChan)
 }
 
+// Stop stops serving incoming events
 func (bot *VkBot) Stop() {
 	bot.longPollServer.StopUpdatesLoop()
 	bot.dispatcher.stopWorkers(func() {/*dumb hook*/})
@@ -218,8 +233,8 @@ func (d *dispatcher) dispatch(eventChan <-chan event.Event) {
 	}
 }
 
-func defaultConfig() VkBotConfig {
-	return VkBotConfig{
+func defaultConfig() BotConfig {
+	return BotConfig{
 		Workers: 16,
 		WorkerBuffer: 4,
 		Events:  16,

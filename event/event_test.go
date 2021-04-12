@@ -89,13 +89,13 @@ func TestEventMethods(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		if e.GroupId() != re.Int("group_id") {
+		if e.GroupID() != re.Int("group_id") {
 			t.Error("different group_ids")
 		}
 		if e.Type() != re.String("type") {
 			t.Error("different types")
 		}
-		if e.EventId() != re.String("event_id") {
+		if e.EventID() != re.String("event_id") {
 			t.Error("different event_ids")
 		}
 		if !reflect.DeepEqual(e.Object(), re.Object("object")) {

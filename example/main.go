@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func BuildFirstKeyboard() *keyboard.Keyboard {
+func buildFirstKeyboard() *keyboard.Keyboard {
 	a1 := keyboard.NewTextAction("button 1")
 	a1.SetPayload(vkbot.Params{"cmd": "button 1"})
 
@@ -32,7 +32,7 @@ func BuildFirstKeyboard() *keyboard.Keyboard {
 	return k
 }
 
-func BuildSecondKeyboard() *keyboard.Keyboard {
+func buildSecondKeyboard() *keyboard.Keyboard {
 	a1 := keyboard.NewTextAction("button 3")
 	a1.SetPayload(vkbot.Params{"cmd": "button 3"})
 
@@ -50,26 +50,29 @@ func BuildSecondKeyboard() *keyboard.Keyboard {
 	return k
 }
 
+// BotApp example bot application
 type BotApp struct {
 	vkBot *vkbot.VkBot
-	vkApi vkbot.VkApi
+	vkAPI vkbot.VkAPI
 	menus map[string]*keyboard.Keyboard
 }
 
-func NewBotApp(token string, groupId int) *BotApp {
-	vkApi := vkbot.NewVkApi(token)
-	longPollServer := vkbot.NewGroupLongPollServer(vkApi, groupId)
+// NewBotApp new bot app with token and group_id
+func NewBotApp(token string, groupID int) *BotApp {
+	vkAPI := vkbot.NewVkAPI(token)
+	longPollServer := vkbot.NewGroupLongPollServer(vkAPI, groupID)
 	longPollServer.SetSettings(vkbot.Params{"message_event": 1})
-	return &BotApp{vkBot: vkbot.NewVkBot(vkApi, longPollServer), vkApi: vkApi}
+	return &BotApp{vkBot: vkbot.NewVkBot(vkAPI, longPollServer), vkAPI: vkAPI}
 }
 
+// MessageEventHandler handler for message_event
 func (app *BotApp) MessageEventHandler(e event.Event) error {
 	me := e.Object()
 	t := typed.New(me.Object("payload"))
 
 	if t.String("type") == "go_to_second" {
-		k, _ := app.menus["second"].Json()
-		_, err := app.vkApi.CallMethod("messages.edit",
+		k, _ := app.menus["second"].JSON()
+		_, err := app.vkAPI.CallMethod("messages.edit",
 			vkbot.Params{
 				"peer_id":                 me.Int("peer_id"),
 				"message":                 "second keyboard",
@@ -81,8 +84,8 @@ func (app *BotApp) MessageEventHandler(e event.Event) error {
 		}
 	}
 	if t.String("type") == "go_to_first" {
-		k, _ := app.menus["first"].Json()
-		_, err := app.vkApi.CallMethod("messages.edit",
+		k, _ := app.menus["first"].JSON()
+		_, err := app.vkAPI.CallMethod("messages.edit",
 			vkbot.Params{
 				"peer_id":                 me.Int("peer_id"),
 				"message":                 "first keyboard",
@@ -96,12 +99,13 @@ func (app *BotApp) MessageEventHandler(e event.Event) error {
 	return nil
 }
 
+// MessageNewHandler handler for message_new
 func (app *BotApp) MessageNewHandler(e event.Event) error {
 	mn := e.Object()
 	m := mn.Object("message")
 	if m.String("text") == "first" {
-		k, _ := app.menus["first"].Json()
-		_, err := app.vkApi.CallMethod("messages.send",
+		k, _ := app.menus["first"].JSON()
+		_, err := app.vkAPI.CallMethod("messages.send",
 			vkbot.Params{
 				"peer_id":                 m.Int("peer_id"),
 				"random_id":               time.Now().UnixNano(),
@@ -114,28 +118,31 @@ func (app *BotApp) MessageNewHandler(e event.Event) error {
 	return nil
 }
 
+// Init initializes bot app
 func (app *BotApp) Init() error {
 	app.menus = make(map[string]*keyboard.Keyboard, 2)
-	app.menus["first"] = BuildFirstKeyboard()
-	app.menus["second"] = BuildSecondKeyboard()
+	app.menus["first"] = buildFirstKeyboard()
+	app.menus["second"] = buildSecondKeyboard()
 
 	app.vkBot.EventHandler(event.MessageNewType, app.MessageNewHandler)
 	app.vkBot.EventHandler(event.MessageEventType, app.MessageEventHandler)
 	return app.vkBot.Init()
 }
 
+// Start app
 func (app *BotApp) Start() {
 	app.vkBot.Start()
 }
 
+// Stop app
 func (app *BotApp) Stop() {
 	app.vkBot.Stop()
 }
 
 func main() {
-	GroupId, _ := strconv.Atoi(os.Getenv("VK_GROUP_ID"))
+	GroupID, _ := strconv.Atoi(os.Getenv("VK_GROUP_ID"))
 	Token := os.Getenv("VK_GROUP_TOKEN")
-	app := NewBotApp(Token, GroupId)
+	app := NewBotApp(Token, GroupID)
 
 	if err := app.Init(); err != nil {
 		vkbot.Logger.Fatal("initialization error", zap.Error(err))

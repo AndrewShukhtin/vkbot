@@ -16,7 +16,7 @@ func TestParams(t *testing.T) {
 		"no_conversion": Params{"test": 1},
 	}
 
-	res := params.UrlValues()
+	res := params.URLValues()
 	if res.Encode() != expected.Encode() {
 		t.Errorf("results should be equal:\nresult:\n%v\nexpected:\n%v\n", res, expected)
 	}

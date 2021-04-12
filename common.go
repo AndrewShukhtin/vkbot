@@ -9,8 +9,10 @@ import (
 )
 
 const (
-	kVkApiVersion = "5.130"
-	kVkApiUrl     = "https://api.vk.com/method/"
+	// VkAPIVersion current version od vk api
+	VkAPIVersion = "5.130"
+	// VkAPIUrl url to vk api
+	VkAPIUrl     = "https://api.vk.com/method/"
 )
 
 var client = &http.Client{

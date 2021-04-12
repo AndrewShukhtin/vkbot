@@ -31,15 +31,15 @@ func TestGroupLongPollServer_Settings(t *testing.T) {
 	}
 }
 
-type fakeVkApi struct {
+type fakeVkAPI struct {
 	respByMethod map[string]typed.Typed
 }
 
-func newFakeVkApi(respByMethod map[string]typed.Typed) *fakeVkApi {
-	return &fakeVkApi{respByMethod: respByMethod}
+func newFakeVkAPI(respByMethod map[string]typed.Typed) *fakeVkAPI {
+	return &fakeVkAPI{respByMethod: respByMethod}
 }
 
-func (api *fakeVkApi) CallMethod(methodName string, params Params) (typed.Typed, error) {
+func (api *fakeVkAPI) CallMethod(methodName string, params Params) (typed.Typed, error) {
 	if resp, ok := api.respByMethod[methodName]; ok {
 		return resp, nil
 	}
@@ -52,7 +52,7 @@ func TestGroupLongPollServerFailedInit(t *testing.T) {
 		{"groups.setLongPollSettings": {}},
 	}
 	for _, test := range tests {
-		s := NewGroupLongPollServer(newFakeVkApi(test), 0)
+		s := NewGroupLongPollServer(newFakeVkAPI(test), 0)
 		err := s.Init()
 		if err == nil {
 			t.Errorf("should be error while initializing groupLongPollServer")
@@ -69,7 +69,7 @@ func TestGroupLongPollServerInit(t *testing.T) {
 			"server": "test_server",
 		},
 	}
-	s := &groupLongPollServer{VkApi: newFakeVkApi(testResp), GroupId: 0, mtx: &sync.Mutex{}}
+	s := &groupLongPollServer{VkAPI: newFakeVkAPI(testResp), GroupID: 0, mtx: &sync.Mutex{}}
 	err := s.Init()
 	if err != nil {
 		t.Errorf("should not be error while initializing groupLongPollServer")
@@ -82,7 +82,7 @@ func TestGroupLongPollServerInit(t *testing.T) {
 func TestGroupLongPollServer_getUpdate(t *testing.T) {
 	type TestCase struct {
 		Name    string // test case Name
-		VkApi   VkApi
+		VkAPI   VkAPI
 		Server  *httptest.Server
 		URL     string
 		Context context.Context
@@ -128,14 +128,14 @@ func TestGroupLongPollServer_getUpdate(t *testing.T) {
 		},
 		{
 			Name:    "groupLongPollServer returned failed and reinitialization failed",
-			VkApi:   newFakeVkApi(map[string]typed.Typed{}),
+			VkAPI:   newFakeVkAPI(map[string]typed.Typed{}),
 			Server:  servers["simple"],
 			Context: context.Background(),
 			URL:     servers["simple"].URL + "/failed",
 		},
 		{
 			Name: "groupLongPollServer returned failed, reinitialization go well, but server always return 'fail'",
-			VkApi: newFakeVkApi(map[string]typed.Typed{"groups.getLongPollServer": {
+			VkAPI: newFakeVkAPI(map[string]typed.Typed{"groups.getLongPollServer": {
 				"ts":     "test_ts",
 				"key":    "test_key",
 				"server": servers["simple"].URL + "/failed",
@@ -147,7 +147,7 @@ func TestGroupLongPollServer_getUpdate(t *testing.T) {
 	}
 	s := &groupLongPollServer{mtx: &sync.Mutex{}}
 	for _, tc := range testCases {
-		s.VkApi = tc.VkApi
+		s.VkAPI = tc.VkAPI
 		s.Server = tc.URL
 		s.client = tc.Server.Client()
 		s.eventCtx = tc.Context
@@ -166,7 +166,7 @@ func TestGroupLongPollServer_getUpdate(t *testing.T) {
 		Context: context.Background(),
 		URL:     servers["simple"].URL + "/fine",
 	}
-	s.VkApi = fineTestCase.VkApi
+	s.VkAPI = fineTestCase.VkAPI
 	s.Server = fineTestCase.URL
 	s.client = fineTestCase.Server.Client()
 	s.eventCtx = fineTestCase.Context

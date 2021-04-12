@@ -1,5 +1,6 @@
 package event
 
+// Supported types of events
 const (
 	MessageNewType         = "message_new"
 	MessageReplyType       = "message_reply"
