@@ -6,6 +6,8 @@ go:
   - 1.15.x
 env:
   - GO111MODULE=on
+  global:
+    - CODECOV_TOKEN='418a925c-5d84-442e-8e6b-3f0bad6bc329'
 install:
   - go get -v golang.org/x/lint/golint
 script:
