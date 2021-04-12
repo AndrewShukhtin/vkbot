@@ -49,7 +49,7 @@ func (api *vkAPI) CallMethod(methodName string, params Params) (typed.Typed, err
 	params["access_token"] = api.Token
 
 	values := params.URLValues()
-	httpResp, err := api.client.PostForm(api.URL + methodName, values)
+	httpResp, err := api.client.PostForm(api.URL+methodName, values)
 	if err != nil {
 		return nil, err
 	}

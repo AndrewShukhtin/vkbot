@@ -25,9 +25,9 @@ func NewButton(act Action, clr string) *Button {
 // NewKeyboard new keyboard
 func NewKeyboard(oneTime bool, inline bool) *Keyboard {
 	return &Keyboard{
-		OneTime:       oneTime,
-		Buttons:       make([][]*Button, 0),
-		Inline:        inline,
+		OneTime: oneTime,
+		Buttons: make([][]*Button, 0),
+		Inline:  inline,
 	}
 }
 

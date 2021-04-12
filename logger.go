@@ -23,14 +23,15 @@ func getEncoder() zapcore.Encoder {
 
 func logInternalErrorOr(msg string, err error) {
 	switch err.(type) {
-	case *internalError: {
-		err := err.(*internalError)
-		Logger.Error(msg,
-			zap.Error(err),
-			zap.String("stack", err.StackTrace),
-			zap.Reflect("misc", err.Misc))
-		return
-	}
+	case *internalError:
+		{
+			err := err.(*internalError)
+			Logger.Error(msg,
+				zap.Error(err),
+				zap.String("stack", err.StackTrace),
+				zap.Reflect("misc", err.Misc))
+			return
+		}
 	}
 	Logger.Error(msg, zap.Error(err))
 }

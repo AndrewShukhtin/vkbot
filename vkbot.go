@@ -35,13 +35,13 @@ var notFoundHandler HandleFunc = func(e event.Event) error {
 // BotConfig allows to configure bot
 type BotConfig struct {
 	// Workers number of workers
-	Workers      int
+	Workers int
 
 	// WorkerBuffer buffer of each worker chan
 	WorkerBuffer int
 
 	// Events buffer off events chan
-	Events       int
+	Events int
 }
 
 // VkBot structure for handle events from GroupLongPollServer
@@ -122,7 +122,7 @@ func (bot *VkBot) Start() {
 // Stop stops serving incoming events
 func (bot *VkBot) Stop() {
 	bot.longPollServer.StopUpdatesLoop()
-	bot.dispatcher.stopWorkers(func() {/*dumb hook*/})
+	bot.dispatcher.stopWorkers(func() { /*dumb hook*/ })
 }
 
 func (bot *VkBot) handleEvent(e event.Event) {
@@ -235,9 +235,9 @@ func (d *dispatcher) dispatch(eventChan <-chan event.Event) {
 
 func defaultConfig() BotConfig {
 	return BotConfig{
-		Workers: 16,
+		Workers:      16,
 		WorkerBuffer: 4,
-		Events:  16,
+		Events:       16,
 	}
 }
 

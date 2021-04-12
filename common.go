@@ -12,7 +12,7 @@ const (
 	// VkAPIVersion current version od vk api
 	VkAPIVersion = "5.130"
 	// VkAPIUrl url to vk api
-	VkAPIUrl     = "https://api.vk.com/method/"
+	VkAPIUrl = "https://api.vk.com/method/"
 )
 
 var client = &http.Client{

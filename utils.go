@@ -18,8 +18,8 @@ func (p Params) URLValues() url.Values {
 	for name, i := range p {
 		switch i.(type) {
 		case string, int, int8, int16, int32, int64,
-				uint, uint8, uint16, uint32, uint64,
-				float32, float64:
+			uint, uint8, uint16, uint32, uint64,
+			float32, float64:
 		default:
 			continue
 		}
@@ -29,20 +29,20 @@ func (p Params) URLValues() url.Values {
 }
 
 type overHeater struct {
-	threshold time.Duration
-	counter int
-	capacity int
+	threshold      time.Duration
+	counter        int
+	capacity       int
 	firstTimeStamp time.Time
-	lastTimeStamp time.Time
-	mtx *sync.Mutex
+	lastTimeStamp  time.Time
+	mtx            *sync.Mutex
 }
 
 func newOverHeater(threshold time.Duration, capacity int) *overHeater {
 	return &overHeater{
 		threshold: threshold,
-		capacity: capacity,
-		counter: capacity,
-		mtx: &sync.Mutex{},
+		capacity:  capacity,
+		counter:   capacity,
+		mtx:       &sync.Mutex{},
 	}
 }
 

@@ -127,17 +127,17 @@ func TestVkBot_Init(t *testing.T) {
 
 func TestVkBot_handleEvent(t *testing.T) {
 	type TestCase struct {
-		Name string
-		withError  bool
+		Name      string
+		withError bool
 	}
 
-	testCases := []TestCase {
+	testCases := []TestCase{
 		{
-			Name: "without error",
+			Name:      "without error",
 			withError: false,
 		},
 		{
-			Name: "with error",
+			Name:      "with error",
 			withError: true,
 		},
 	}
@@ -261,7 +261,7 @@ func TestVkBot_Stop(t *testing.T) {
 func TestVkBot_Start(t *testing.T) {
 	longPollServer := newFakeLongPollServer()
 	bot := VkBot{
-		handlers: map[string]HandleFunc{},
+		handlers:       map[string]HandleFunc{},
 		longPollServer: longPollServer,
 		config: BotConfig{
 			Workers: 3,

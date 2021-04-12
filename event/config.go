@@ -9,5 +9,4 @@ const (
 	MessageDenyType        = "message_deny"
 	MessageTypingStateType = "message_typing_state"
 	MessageEventType       = "message_event"
-
 )

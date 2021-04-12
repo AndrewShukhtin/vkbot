@@ -76,9 +76,9 @@ func TestUnsupportedEventType(t *testing.T) {
 func TestEventMethods(t *testing.T) {
 	rawEvents := []typed.Typed{
 		{
-			"type":     "message_new",
-			"object":   typed.Typed{
-				"test_obj" : 22,
+			"type": "message_new",
+			"object": typed.Typed{
+				"test_obj": 22,
 			},
 			"group_id": 0,
 			"event_id": "xxooxx",

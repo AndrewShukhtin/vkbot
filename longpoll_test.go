@@ -182,8 +182,7 @@ func TestGroupLongPollServer_getUpdate(t *testing.T) {
 	}
 }
 
-func
-TestGroupLongPollServer_AtOverheat(t *testing.T) {
+func TestGroupLongPollServer_AtOverheat(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -228,8 +227,7 @@ TestGroupLongPollServer_AtOverheat(t *testing.T) {
 	s.eventCancel()
 }
 
-func
-TestGroupLongPollServer_AtLimit(t *testing.T) {
+func TestGroupLongPollServer_AtLimit(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -275,8 +273,7 @@ TestGroupLongPollServer_AtLimit(t *testing.T) {
 	}
 }
 
-func
-TestGroupLongPollServer_AtResponseError(t *testing.T) {
+func TestGroupLongPollServer_AtResponseError(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -305,7 +302,6 @@ TestGroupLongPollServer_AtResponseError(t *testing.T) {
 
 	timer := time.NewTimer(time.Millisecond * 100)
 
-
 	d.AtResponseError = func(_ *overHeater, _ error) {
 		done <- true
 		s.eventCancel()
@@ -323,8 +319,7 @@ TestGroupLongPollServer_AtResponseError(t *testing.T) {
 	s.eventCancel()
 }
 
-func
-TestGroupLongPollServer_AtNewUpdateError(t *testing.T) {
+func TestGroupLongPollServer_AtNewUpdateError(t *testing.T) {
 	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
@@ -373,8 +368,7 @@ TestGroupLongPollServer_AtNewUpdateError(t *testing.T) {
 	s.eventCancel()
 }
 
-func
-TestParseToUpdate(t *testing.T) {
+func TestParseToUpdate(t *testing.T) {
 	testCases := []typed.Typed{
 		{
 			"ts": 1,
@@ -465,7 +459,7 @@ func TestNewUpdate(t *testing.T) {
 			},
 		},
 	}
-	LOOP:
+LOOP:
 	for _, tc := range testCases {
 		u, err := NewUpdate(tc)
 		if err != nil {

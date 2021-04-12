@@ -12,7 +12,7 @@ func TestParams(t *testing.T) {
 	expected.Set("test1", "1")
 
 	params := Params{
-		"test1": 1,
+		"test1":         1,
 		"no_conversion": Params{"test": 1},
 	}
 

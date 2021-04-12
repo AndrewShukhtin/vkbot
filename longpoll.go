@@ -56,13 +56,13 @@ type (
 // LongPollConfig enable to configure GroupLongPollServe
 type LongPollConfig struct {
 	// Wait max time (in seconds) to await updates
-	Wait             int
+	Wait int
 
 	// UpdateBufferSize size of Update chan buffer size
 	UpdateBufferSize int
 
 	// Limiter rate limiter for incoming updates
-	Limiter          *rate.Limiter
+	Limiter *rate.Limiter
 }
 
 // NewGroupLongPollServer create new GroupLongPollServer with VkAPI wrapper and group id
@@ -343,19 +343,19 @@ func (s *groupLongPollServer) getUpdate() chan unmarshalledResponseAndErr {
 
 func (s *groupLongPollServer) defaultSettings() {
 	s.settings = Params{
-		"group_id":              s.GroupID,
-		"enabled":               1,
-		"api_version":           VkAPIVersion,
-		"app_payload":           0,
-		"audio_new":             0,
-		"board_post_delete":     0,
-		"board_post_edit":       0,
-		"board_post_new":        0,
-		"board_post_restore":    0,
-		"group_change_photo":    0,
-		"group_change_settings": 0,
-		"group_join":            0,
-		"group_leave":           0,
+		"group_id":                         s.GroupID,
+		"enabled":                          1,
+		"api_version":                      VkAPIVersion,
+		"app_payload":                      0,
+		"audio_new":                        0,
+		"board_post_delete":                0,
+		"board_post_edit":                  0,
+		"board_post_new":                   0,
+		"board_post_restore":               0,
+		"group_change_photo":               0,
+		"group_change_settings":            0,
+		"group_join":                       0,
+		"group_leave":                      0,
 		"group_officers_edit":              0,
 		"market_comment_delete":            0,
 		"market_comment_edit":              0,

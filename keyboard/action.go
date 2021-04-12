@@ -63,7 +63,7 @@ func (b *BaseAction) GetPayload() string {
 // TextAction action of text type
 type TextAction struct {
 	BaseAction
-	Label   string `json:"label"`
+	Label string `json:"label"`
 }
 
 // NewTextAction new action of text type
@@ -77,8 +77,8 @@ func NewTextAction(label string) *TextAction {
 // OpenLinkAction action of open_link type
 type OpenLinkAction struct {
 	BaseAction
-	Link    string `json:"link"`
-	Label   string `json:"label"`
+	Link  string `json:"link"`
+	Label string `json:"label"`
 }
 
 // NewOpenLinkAction new action of open_link type
@@ -105,7 +105,7 @@ func NewLocationAction() *LocationAction {
 // VkPayAction action of vkpay type
 type VkPayAction struct {
 	BaseAction
-	Hash    string `json:"hash"`
+	Hash string `json:"hash"`
 }
 
 // NewVkPayAction new  action of vkpay type
@@ -136,7 +136,7 @@ func NewVkAppsAction(label string) *VkAppsAction {
 // CallbackAction action of callback type
 type CallbackAction struct {
 	BaseAction
-	Label   string `json:"label"`
+	Label string `json:"label"`
 }
 
 // NewCallbackAction new action of callback type
