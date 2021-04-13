@@ -103,12 +103,12 @@ func (app *BotApp) MessageEventHandler(e event.Event) error {
 func (app *BotApp) MessageNewHandler(e event.Event) error {
 	mn := e.Object()
 	m := mn.Object("message")
-	if m.String("text") == "first" {
+	if m.String("text") == "go" {
 		k, _ := app.menus["first"].JSON()
 		_, err := app.vkAPI.CallMethod("messages.send",
 			vkbot.Params{
 				"peer_id":                 m.Int("peer_id"),
-				"random_id":               time.Now().UnixNano(),
+				"random_id":               getRandomID(),
 				"message":                 "first keyboard",
 				"conversation_message_id": m.Int("conversation_message_id"),
 				"keyboard":                k,
@@ -172,4 +172,8 @@ func main() {
 
 	<-done
 	close(sigChan)
+}
+
+func getRandomID() int64 {
+	return time.Now().UnixNano()
 }
